@@ -1,3 +1,5 @@
+import 'package:attendance_calculator/main.dart';
+import 'package:attendance_calculator/model/subject_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 class AddSubject extends StatelessWidget {
@@ -67,10 +69,18 @@ class AddSubject extends StatelessWidget {
                     SizedBox(height: 15,),
                     ElevatedButton(onPressed: (){
                       if(_globalKey.currentState!.validate()){
+                        final student_strength= _totalstudent_controller.text;
+                        final total_student= int.parse(student_strength);
 
-                        print(_subject_controller.text);
+                        final data= SubjectModel(
+                            subject: _subject_controller.text,
+                           dept: _dept_controller.text,
+                           semester: _semester_controller.text,
+                           totalstrength: total_student, id: DateTime.now().microsecondsSinceEpoch.toString()
+                        );
 
-
+                        subject_box.put(data.id, data);
+                        Navigator.pop(context);
                       }
 
                     }, child: Text('Add Subject'))

@@ -1,10 +1,21 @@
 import 'dart:async';
 
 import 'package:attendance_calculator/screens/home_screen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'model/subject_model.dart';
 
-void main(){
+late Box<SubjectModel>subject_box;
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+
+  if(!Hive.isAdapterRegistered(1)){
+    Hive.registerAdapter(SubjectModelAdapter());
+  }
+  subject_box=await Hive.openBox<SubjectModel>('name');
+  //subject_box= await Hive.openBox<SubjectModel>('name');
   runApp(MyApp());
 }
 
