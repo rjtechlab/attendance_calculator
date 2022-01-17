@@ -20,3 +20,4 @@ class SubjectModel{
   String id;
   SubjectModel({required this.subject,required this.dept,required this.semester,required this.totalstrength,required this.id});
 }
+

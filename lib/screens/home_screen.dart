@@ -30,7 +30,7 @@ class HomeScreen extends StatelessWidget {
                     return ListTile(
                       onTap: (){
                         final subject_value= subject_item!.subject;
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context){ return AttendanceScreen(subject: subject_value,);}));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context){ return AttendanceScreen(subject: subject_value, totalstudents: subject_item.totalstrength,);}));
                       },
                       title: Text(subject_item!.subject),
                     subtitle: Container(
