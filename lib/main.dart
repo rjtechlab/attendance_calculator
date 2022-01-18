@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:attendance_calculator/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'model/attendance_model.dart';
 import 'model/subject_model.dart';
 
 late Box<SubjectModel>subject_box;
+late Box<AttendenceModel>attendance_box;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,8 +16,13 @@ Future<void> main() async {
   if(!Hive.isAdapterRegistered(1)){
     Hive.registerAdapter(SubjectModelAdapter());
   }
+
+  if(!Hive.isAdapterRegistered(2)){
+    Hive.registerAdapter(AttendenceModelAdapter());
+  }
   subject_box=await Hive.openBox<SubjectModel>('name');
-  //subject_box= await Hive.openBox<SubjectModel>('name');
+  attendance_box=await Hive.openBox<AttendenceModel>('attendance');
+
   runApp(MyApp());
 }
 
