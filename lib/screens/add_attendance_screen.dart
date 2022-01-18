@@ -93,9 +93,14 @@ class AddAttendanceScreen extends StatelessWidget {
                 if(date==null){
                   return;
                 }
-                final absentees = period_controller.text;
+               final  periodlist = period_controller.text.split(",");
+               final periodlist_integer = periodlist.map(int.parse).toList();
+
+
+                final absentees = absent_controller.text;
                 find_finalattendance(context, absentees);
-                final attendance_data=AttendenceModel(periods: tempperiodlist, date: date!, id: DateTime.now().microsecondsSinceEpoch.toString(), rollnumberlist: finalattendancelist, subject: subject);
+                final attendance_data=AttendenceModel(periods: periodlist_integer, date: date!, id: DateTime.now().microsecondsSinceEpoch.toString(),
+                    rollnumberlist: finalattendancelist, subject: subject);
                 attendance_box.add(attendance_data);
                 Navigator.pop(context);
               },
@@ -107,7 +112,8 @@ class AddAttendanceScreen extends StatelessWidget {
     );
   }
 
-  void find_finalattendance(BuildContext context, String absentees) {
+  void find_finalattendance(BuildContext context, String absentees, ) {
+
     if (absentees.isNotEmpty) {
       absenteeslist = absentees.split(",");
       absenteeslist_integer = absenteeslist.map(int.parse).toList();
@@ -134,6 +140,7 @@ class AddAttendanceScreen extends StatelessWidget {
                       Text('Total student strength is $totalstudents'),
                       ElevatedButton(
                           onPressed: () {
+
                             absenteeslist.clear();
                             final absent = absent_controller.text;
                             absenteeslist = absent.split(",");
@@ -160,4 +167,6 @@ class AddAttendanceScreen extends StatelessWidget {
     }
     SystemChannels.textInput.invokeMethod('TextInput.hide'); //Dispose keyboard
   }
+
+
 }

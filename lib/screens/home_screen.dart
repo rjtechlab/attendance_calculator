@@ -16,7 +16,10 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Subjects'),centerTitle: true,
+        title: Text('Subjects'),
+        actions: [ IconButton(onPressed: (){
+          Navigator.of(context).push(MaterialPageRoute(builder: (context){return AddSubject();}));
+        }, icon: Icon(Icons.add),)],
       ),
       body: SafeArea(
           child: ValueListenableBuilder(
@@ -32,7 +35,8 @@ class HomeScreen extends StatelessWidget {
                     return ListTile(
                       onTap: (){
                         final subject_value= subject_item!.subject;
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context){ return AttendanceScreen(subject: subject_value, totalstudents: subject_item.totalstrength,);}));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                          return AttendanceScreen(subject: subject_value, totalstudents: subject_item.totalstrength,);}));
                       },
                       title: Text(subject_item!.subject),
                     subtitle: Container(
@@ -61,12 +65,7 @@ class HomeScreen extends StatelessWidget {
 
           )
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-       Navigator.of(context).push(MaterialPageRoute(builder: (context){return AddSubject();}));
-        },
-      child: Icon(Icons.add,size: 35,),
-      ),
-    );
+
+          );
   }
 }
