@@ -1,13 +1,15 @@
 import 'package:attendance_calculator/main.dart';
 import 'package:attendance_calculator/model/attendance_model.dart';
+import 'package:attendance_calculator/model/subject_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class AddAttendanceScreen extends StatelessWidget {
-  String subject;
-  int totalstudents;
+  SubjectModel subjectModel;
+  //String subject;
+  //int totalstudents;
   ValueNotifier<String> datein_string = ValueNotifier<String>('');
   DateTime? date;
   final absent_controller = TextEditingController();
@@ -19,13 +21,15 @@ class AddAttendanceScreen extends StatelessWidget {
   final _FormKey=GlobalKey<FormState>();
   List<int> tempperiodlist=[1,2];
 
-  AddAttendanceScreen({required this.subject, required this.totalstudents});
+  AddAttendanceScreen({required this.subjectModel
+    //required this.subject, required this.totalstudents
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('$subject -Attendance List'),
+        title: Text(subjectModel.subject),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -100,7 +104,7 @@ class AddAttendanceScreen extends StatelessWidget {
                 final absentees = absent_controller.text;
                 find_finalattendance(context, absentees);
                 final attendance_data=AttendenceModel(periods: periodlist_integer, date: date!, id: DateTime.now().microsecondsSinceEpoch.toString(),
-                    rollnumberlist: finalattendancelist, subject: subject);
+                    rollnumberlist: finalattendancelist, subject:subjectModel.subject, department: subjectModel.dept, submodel: subjectModel);
                 attendance_box.add(attendance_data);
                 Navigator.pop(context);
               },
@@ -119,7 +123,7 @@ class AddAttendanceScreen extends StatelessWidget {
       absenteeslist_integer = absenteeslist.map(int.parse).toList();
 
       for (var element in absenteeslist_integer) {
-        if (element > totalstudents) {
+        if (element > subjectModel.totalstrength) {
           showDialog(
               context: context,
               builder: (ctx) {
@@ -137,7 +141,7 @@ class AddAttendanceScreen extends StatelessWidget {
                             InputDecoration(border: OutlineInputBorder()),
                         controller: absent_controller,
                       ),
-                      Text('Total student strength is $totalstudents'),
+                      Text('Total student strength is' +subjectModel.totalstrength.toString()),
                       ElevatedButton(
                           onPressed: () {
 

@@ -22,13 +22,15 @@ class AttendenceModelAdapter extends TypeAdapter<AttendenceModel> {
       date: fields[3] as DateTime,
       id: fields[0] as String,
       rollnumberlist: (fields[1] as List).cast<int>(),
+      department: fields[5] as String,
+      submodel: fields[6] as SubjectModel,
     );
   }
 
   @override
   void write(BinaryWriter writer, AttendenceModel obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -38,7 +40,11 @@ class AttendenceModelAdapter extends TypeAdapter<AttendenceModel> {
       ..writeByte(3)
       ..write(obj.date)
       ..writeByte(4)
-      ..write(obj.subject);
+      ..write(obj.subject)
+      ..writeByte(5)
+      ..write(obj.department)
+      ..writeByte(6)
+      ..write(obj.submodel);
   }
 
   @override

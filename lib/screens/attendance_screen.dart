@@ -1,27 +1,32 @@
 import 'package:attendance_calculator/main.dart';
 import 'package:attendance_calculator/model/attendance_model.dart';
+import 'package:attendance_calculator/model/subject_model.dart';
 import 'package:attendance_calculator/screens/add_attendance_screen.dart';
 import 'package:attendance_calculator/screens/calculate_attendance_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 
 class AttendanceScreen extends StatelessWidget {
-  String subject;
-  int totalstudents;
+  SubjectModel subjectmodel;
+  //String subject;
+ // int totalstudents;
   List<int>rollnumber_calculation=[];
 
-  AttendanceScreen({required this.subject, required this.totalstudents});
+  AttendanceScreen({required this.subjectmodel});
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
-      appBar: AppBar(title: Text('$subject Attendance'),actions: [
+      appBar: AppBar(title: Text('${subjectmodel.subject} Attendance'),actions: [
         IconButton(onPressed: (){
           Navigator.of(context).push(MaterialPageRoute(builder: (context)
           {
-            return AddAttendanceScreen(
-                subject: subject, totalstudents: totalstudents);}));
+            return AddAttendanceScreen(subjectModel: subjectmodel,
+                //subject: subjectmodel.subject, totalstudents: subjectmodel.totalstrength,
+            );}));
 
         }, icon: Icon(Icons.add))
       ],),
@@ -31,14 +36,14 @@ class AttendanceScreen extends StatelessWidget {
             children: [
               ElevatedButton(onPressed: (){
                 rollnumber_calculation.clear();
-                Navigator.of(context).push(MaterialPageRoute(builder: (context){return CalculationScreen(passingsubject: subject);}));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context){return CalculationScreen(passingmodel: subjectmodel);}));
               },
                 child: Text('Calculate'),style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.teal)),),
               Expanded(
                 child: ValueListenableBuilder(
                   valueListenable: attendance_box.listenable(),
                   builder: (BuildContext context, Box<AttendenceModel> value, Widget? child) {
-                    final keys= value.keys.cast().where((element) => value.get(element)!.subject==subject).toList();
+                    final keys= value.keys.cast().where((element) => value.get(element)!.submodel.id==subjectmodel.id).toList();
                     return ListView.separated(
                         itemBuilder: (context,index){
                           final attendance_item=value.get(keys[index]);
@@ -49,12 +54,21 @@ class AttendanceScreen extends StatelessWidget {
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5),
                                   side: BorderSide(color: Colors.black)),
                               title: Text('Absentees : '+attendance_item.rollnumberlist.toString()),
-                              subtitle: Text('Period : '+attendance_item.periods.toString()),
+                              subtitle: ListView(
+
+                                shrinkWrap: true,
+                                //mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('Dept. : '+attendance_item.department),
+                                  SizedBox(width: 10),
+                                  Text('Period : '+attendance_item.periods.toString().replaceAll('[', ' ').replaceAll(']', ' ')),
+                                ],
+                              ),
                             leading: CircleAvatar(
-                              radius: 22,
+                              radius: 24,
                               backgroundColor: Colors.grey[200],
                                 child: Text(parsedate(attendance_item.date),
-                                  style: TextStyle(color: Colors.black,fontSize: 10),)),
+                                  style: TextStyle(color: Colors.black,fontSize: 12,fontWeight: FontWeight.bold),)),
                               trailing: IconButton(icon: Icon(Icons.delete),onPressed: (){
                                 attendance_box.delete(keys[index]);
                               },),
