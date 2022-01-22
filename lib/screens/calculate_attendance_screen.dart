@@ -47,7 +47,9 @@ class CalculationScreen extends StatelessWidget {
     final displaywidgets=listwidget(map);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Final Attendance'),),
+      backgroundColor: Colors.grey[200],
+      appBar: AppBar(backgroundColor: Colors.brown,
+        title: Text('Final Attendance'),),
       body: SafeArea(
         child:ListView(
           children: [
@@ -70,9 +72,9 @@ class CalculationScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Total Student : '+ passingmodel.totalstrength.toString(),style: TextStyle(color: Colors.indigo),),
+                        Text('Total Student : '+ passingmodel.totalstrength.toString(),style: TextStyle(color: Colors.deepPurple),),
                         //SizedBox(width: 25),
-                        Text('Total Hours Handled : ' + period_calculation.length.toString(),style: TextStyle(color: Colors.deepPurple)),
+                        Text('Total Hours Handled : ' + period_calculation.length.toString(),style: TextStyle(color: Colors.indigo)),
                       ],
                     ),
                     SizedBox(width: 10),

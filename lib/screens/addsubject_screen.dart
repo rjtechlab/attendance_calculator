@@ -14,7 +14,9 @@ class AddSubject extends StatelessWidget {
     final _semester_controller=TextEditingController();
     final _totalstudent_controller=TextEditingController();
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
+        backgroundColor: Colors.brown,
         centerTitle: true,
         title: Text('Add Subject'),
       ),
@@ -27,6 +29,7 @@ class AddSubject extends StatelessWidget {
                 child: Column(
                   children: [
                     TextFormField(
+                      textCapitalization: TextCapitalization.words,
                       decoration: InputDecoration(border: OutlineInputBorder(),hintText: 'Subject Name'),
                       controller:_subject_controller ,
                      validator: (value){
@@ -37,6 +40,7 @@ class AddSubject extends StatelessWidget {
                     ),
                     SizedBox(height: 15,),
                     TextFormField(
+                      textCapitalization: TextCapitalization.words,
                       decoration: InputDecoration(border: OutlineInputBorder(),hintText: 'Department Name'),
                       controller:_dept_controller ,
                       validator: (value){
@@ -47,6 +51,7 @@ class AddSubject extends StatelessWidget {
                     ),
                     SizedBox(height: 15),
                     TextFormField(
+                      textCapitalization: TextCapitalization.words,
                       decoration: InputDecoration(border: OutlineInputBorder(),hintText: 'Semester'),
                       controller:_semester_controller ,
                       validator: (value){

@@ -8,6 +8,7 @@ import 'model/subject_model.dart';
 
 late Box<SubjectModel>subject_box;
 late Box<AttendenceModel>attendance_box;
+ValueNotifier<bool> isemptycalculatebutton=ValueNotifier(true);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +23,7 @@ Future<void> main() async {
   }
   subject_box=await Hive.openBox<SubjectModel>('name');
   attendance_box=await Hive.openBox<AttendenceModel>('attendance');
-
+  //attendance_box.clear();
   runApp(MyApp());
 }
 
@@ -31,21 +32,18 @@ class MyApp extends StatelessWidget{
   Widget build(BuildContext context) {
    return MaterialApp(
      home: SplashScreen(),
+     debugShowCheckedModeBanner: false,
    );
   }
 }
 class SplashScreen extends StatefulWidget {
-
-
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }
-
 class _SplashScreenState extends State<SplashScreen> {
-
   @override
   void initState() {
-Timer(Duration(seconds: 3), (){
+Timer(Duration(seconds: 4), (){
   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context){ return HomeScreen();}), (route) => false);
 });
   }
@@ -56,10 +54,8 @@ Timer(Duration(seconds: 3), (){
           child: Center(
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(600)),
-                child: Image.asset('assets/rj logo.jpg')),
+                child: Image.asset('assets/RJ1.jpg')),
           )),
     );
   }
 }
-
-

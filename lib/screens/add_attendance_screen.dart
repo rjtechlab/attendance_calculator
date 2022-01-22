@@ -28,13 +28,15 @@ class AddAttendanceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      backgroundColor: Colors.grey[200],
+      appBar: AppBar(backgroundColor: Colors.brown,
         title: Text(subjectModel.subject),
         centerTitle: true,
       ),
       body: SafeArea(
-          child: Column(
-        mainAxisSize: MainAxisSize.min,
+          child: ListView(
+            shrinkWrap: true,
+        //mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
             padding: const EdgeInsets.all(15.0),
@@ -59,7 +61,7 @@ class AddAttendanceScreen extends StatelessWidget {
                     return 'Please enter period';
                   }
                 },
-                keyboardType: TextInputType.numberWithOptions(),
+                keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp('[0-9,]')),
                 ],
@@ -83,32 +85,41 @@ class AddAttendanceScreen extends StatelessWidget {
                 datein_string.value = date.toString();
               }
             },
-            icon: Icon(Icons.calendar_today),
+            icon: Icon(Icons.calendar_today,color: Colors.brown,),
             label:  ValueListenableBuilder( valueListenable: datein_string,
               builder: (BuildContext ctx, String finaldate, Widget? _) {
-                return date==null?Text('SelectDate',style: TextStyle(color: Colors.red),):Text(DateFormat.yMMMd().format(date!));
+                return date==null?Text('SelectDate',style: TextStyle(color: Colors.grey[800]),):Text(DateFormat.yMMMd().format(date!),style: TextStyle(color: Colors.brown),);
               },
             ),
           ),
-          ElevatedButton(
-              onPressed: () {
+          Padding(
+            padding: const EdgeInsets.only(left: 150,right: 150),
+            child: ElevatedButton(
+              style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.grey)),
+                onPressed: () async {
 
-                _FormKey.currentState!.validate();
-                if(date==null){
-                  return;
-                }
-               final  periodlist = period_controller.text.split(",");
-               final periodlist_integer = periodlist.map(int.parse).toList();
+                  _FormKey.currentState!.validate();
+                  if(date==null){
+                    return;
+                  }
+                 final  periodlist = period_controller.text.split(",");
+                 final periodlist_integer = periodlist.map(int.parse).toList();
 
 
-                final absentees = absent_controller.text;
-                find_finalattendance(context, absentees);
-                final attendance_data=AttendenceModel(periods: periodlist_integer, date: date!, id: DateTime.now().microsecondsSinceEpoch.toString(),
-                    rollnumberlist: finalattendancelist, subject:subjectModel.subject, department: subjectModel.dept, submodel: subjectModel);
-                attendance_box.add(attendance_data);
-                Navigator.pop(context);
-              },
-              child: Text('Add')),
+                 // final absentees = absent_controller.text.split(',');
+                 await find_finalattendance(context, absent_controller.text);
+
+                  final attendance_data=AttendenceModel(periods: periodlist_integer, date: date!, id: DateTime.now().microsecondsSinceEpoch.toString(),
+                      rollnumberlist: finalattendancelist, subject:subjectModel.subject, department: subjectModel.dept, submodel: subjectModel);
+                  attendance_box.add(attendance_data);
+
+                  attendance_box.isEmpty?isemptycalculatebutton.value=false:isemptycalculatebutton.value=true;
+                  isemptycalculatebutton.notifyListeners();
+
+                  Navigator.pop(context);
+                },
+                child: Text('Add',style: TextStyle(color: Colors.black),)),
+          ),
         ],
       )
           //Text(subject+ totalstudents.toString()),
@@ -116,58 +127,72 @@ class AddAttendanceScreen extends StatelessWidget {
     );
   }
 
-  void find_finalattendance(BuildContext context, String absentees, ) {
+   find_finalattendance(context, String absentees, )  async {
 
     if (absentees.isNotEmpty) {
       absenteeslist = absentees.split(",");
       absenteeslist_integer = absenteeslist.map(int.parse).toList();
-
+        print('ok $absenteeslist_integer');
       for (var element in absenteeslist_integer) {
-        if (element > subjectModel.totalstrength) {
-          showDialog(
-              context: context,
-              builder: (ctx) {
-                return AlertDialog(
-                  title: Text('Alert!!'),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextField(
-                        keyboardType: TextInputType.numberWithOptions(),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp('[0-9,]')),
-                        ],
-                        decoration:
-                            InputDecoration(border: OutlineInputBorder()),
-                        controller: absent_controller,
-                      ),
-                      Text('Total student strength is' +subjectModel.totalstrength.toString()),
-                      ElevatedButton(
-                          onPressed: () {
 
-                            absenteeslist.clear();
-                            final absent = absent_controller.text;
-                            absenteeslist = absent.split(",");
-                            absenteeslist_integer =
-                                absenteeslist.map(int.parse).toList();
+        if (element>subjectModel.totalstrength) {
+          print(element);
+          print(subjectModel.totalstrength);
+         //  await showDialog(context: context, builder: (context){
+         //   return AlertDialog(title: Text('text'),);
+         // });
 
-                            finalattendancelist = absenteeslist_integer;
-                            print('parsed list=$finalattendancelist');
-                            absent_controller
-                                .clear(); //Clear textformfield after attendance  entering
-                            SystemChannels.textInput.invokeMethod(
-                                'TextInput.hide'); //Dispose keyboard
-                            Navigator.of(context).pop();
-                          },
-                          child: Text('OK'))
+          await showDialog(context: context, builder: (context) {
+            return AlertDialog(title: Text('Alert!!'),
+              // });
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    keyboardType: TextInputType.numberWithOptions(),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp('[0-9,]')),
                     ],
+                    decoration:
+                    InputDecoration(border: OutlineInputBorder()),
+                    controller: absent_controller,
                   ),
-                );
-              });
-        } else {
+                  Text('Total student strength is' +
+                      subjectModel.totalstrength.toString()),
+                  ElevatedButton(
+                      onPressed: () {
+                        absenteeslist.clear();
+                        final absent = absent_controller.text;
+                        absenteeslist = absent.split(",");
+                        find_finalattendance(context, absent_controller.text);
+                        absenteeslist_integer =
+                            absenteeslist.map(int.parse).toList();
+
+                        finalattendancelist = absenteeslist_integer;
+
+                        print('parsed list=$finalattendancelist');
+                       // absent_controller.clear();
+
+                        //Clear textformfield after attendance  entering
+                        SystemChannels.textInput.invokeMethod(
+                            'TextInput.hide'); //Dispose keyboard
+                        Navigator.of(context).pop();
+                      },
+                      child: Text('OK')),
+                ],
+              ),);
+          });
+              }
+          else
+            {
           finalattendancelist = absenteeslist_integer;
         }
       }
+    }
+    else{
+      finalattendancelist=absenteeslist_integer;
+      print('in else');
+      Navigator.of(context).pop();
     }
     SystemChannels.textInput.invokeMethod('TextInput.hide'); //Dispose keyboard
   }
