@@ -18,4 +18,11 @@ class Assigncontrollers with ChangeNotifier{
    id=model.id;
    notifyListeners();
   }
+  void Clearprovider(){
+    subject_controller.clear();
+    dept_controller.clear();
+    semester_controller.clear();
+    totalstudent_controller.clear();
+
+  }
 }

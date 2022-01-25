@@ -25,6 +25,7 @@ class HomeScreen extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: Text('Subjects'),
         actions: [ IconButton(onPressed: (){
+          Provider.of<Assigncontrollers>(context,listen: false).Clearprovider();
          // subject_box.clear();
          // attendance_box.clear();
           Navigator.of(context).push(MaterialPageRoute(builder: (context){return AddSubject();}));
