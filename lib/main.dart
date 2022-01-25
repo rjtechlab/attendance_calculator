@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:attendance_calculator/providerclass.dart';
 import 'package:attendance_calculator/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
 import 'model/attendance_model.dart';
 import 'model/subject_model.dart';
 
@@ -24,15 +26,21 @@ Future<void> main() async {
   subject_box=await Hive.openBox<SubjectModel>('name');
   attendance_box=await Hive.openBox<AttendenceModel>('attendance');
   //attendance_box.clear();
+ // subject_box.clear();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
-   return MaterialApp(
-     home: SplashScreen(),
-     debugShowCheckedModeBanner: false,
+   return ChangeNotifierProvider(
+     create: (context){
+       return Assigncontrollers();
+     },
+     child: MaterialApp(
+       home: SplashScreen(),
+       debugShowCheckedModeBanner: false,
+     ),
    );
   }
 }

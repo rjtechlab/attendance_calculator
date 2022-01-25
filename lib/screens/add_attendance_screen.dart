@@ -112,6 +112,12 @@ class AddAttendanceScreen extends StatelessWidget {
                   final attendance_data=AttendenceModel(periods: periodlist_integer, date: date!, id: DateTime.now().microsecondsSinceEpoch.toString(),
                       rollnumberlist: finalattendancelist, subject:subjectModel.subject, department: subjectModel.dept, submodel: subjectModel);
                   attendance_box.add(attendance_data);
+                  final list=attendance_box.values.toList();
+                  list.sort((a,b)=>b.date.compareTo(a.date));
+                  final listkeys=attendance_box.keys.cast();
+                  attendance_box.deleteAll(listkeys);
+                  await attendance_box.addAll(list);
+
 
                   attendance_box.isEmpty?isemptycalculatebutton.value=false:isemptycalculatebutton.value=true;
                   isemptycalculatebutton.notifyListeners();

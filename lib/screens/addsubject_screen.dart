@@ -1,7 +1,11 @@
 import 'package:attendance_calculator/main.dart';
 import 'package:attendance_calculator/model/subject_model.dart';
+import 'package:attendance_calculator/screens/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providerclass.dart';
 class AddSubject extends StatelessWidget {
 
 
@@ -9,10 +13,14 @@ class AddSubject extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final _globalKey=GlobalKey<FormState>();
-    final _subject_controller=TextEditingController();
-    final _dept_controller=TextEditingController();
-    final _semester_controller=TextEditingController();
-    final _totalstudent_controller=TextEditingController();
+     var _subject_controller=TextEditingController();
+     var _dept_controller=TextEditingController();
+     var _semester_controller=TextEditingController();
+     var _totalstudent_controller=TextEditingController();
+     _subject_controller=Provider.of<Assigncontrollers>(context,listen: false).subject_controller;
+     _dept_controller=Provider.of<Assigncontrollers>(context,listen: false).dept_controller;
+     _semester_controller=Provider.of<Assigncontrollers>(context,listen: false).semester_controller;
+     _totalstudent_controller=Provider.of<Assigncontrollers>(context,listen: false).totalstudent_controller;
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
@@ -31,7 +39,7 @@ class AddSubject extends StatelessWidget {
                     TextFormField(
                       textCapitalization: TextCapitalization.words,
                       decoration: InputDecoration(border: OutlineInputBorder(),hintText: 'Subject Name'),
-                      controller:_subject_controller ,
+                      controller:_subject_controller,
                      validator: (value){
                        if(value==null||value.isEmpty ){
                          return 'Enter Subject Name';
@@ -64,7 +72,7 @@ class AddSubject extends StatelessWidget {
                     TextFormField(
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(border: OutlineInputBorder(),hintText: 'Total no of students'),
-                      controller:_totalstudent_controller ,
+                      controller: _totalstudent_controller,
                       validator: (value){
                         if(value==null||value.isEmpty ){
                           return 'Enter Total no of students';
@@ -81,10 +89,12 @@ class AddSubject extends StatelessWidget {
                             subject: _subject_controller.text,
                            dept: _dept_controller.text,
                            semester: _semester_controller.text,
-                           totalstrength: total_student, id: DateTime.now().microsecondsSinceEpoch.toString()
+                           totalstrength: total_student, id:subjectaddoredit? DateTime.now().microsecondsSinceEpoch.toString():
+                        Provider.of<Assigncontrollers>(context,listen: false).id
                         );
 
-                        subject_box.put(data.id, data);
+                       subjectaddoredit? subject_box.put(data.id, data):subject_box.put(Provider.of<Assigncontrollers>(context,listen: false).id, data);
+                       subjectaddoredit=true;
                         Navigator.pop(context);
                       }
 

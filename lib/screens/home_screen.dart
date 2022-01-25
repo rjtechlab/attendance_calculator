@@ -7,9 +7,11 @@ import 'package:attendance_calculator/screens/add_attendance_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-
+import 'package:provider/provider.dart';
+import '../providerclass.dart';
 import 'attendance_screen.dart';
 
+bool subjectaddoredit=true;
 
 class HomeScreen extends StatelessWidget {
 
@@ -54,8 +56,7 @@ class HomeScreen extends StatelessWidget {
                       child: Card(
                         child: ListTile(
 
-                          //tileColor: Colors.brown[100],
-                          //hape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5),side: BorderSide(color: Colors.black)),
+
                           onTap: (){
                             final checkkeys=attendance_box.keys.where((element) => attendance_box.get(element)!.submodel.id==subject_item!.id);
                             if(checkkeys.isEmpty){
@@ -81,23 +82,7 @@ class HomeScreen extends StatelessWidget {
                             child: Text(subject_item!.subject),
                           ),
 
-                          //---------------------------------------------
-                        // subtitle: Container(
-                        //   height: 20,
-                        //   width: 50,
-                        //   //color: Colors.grey[400],
-                        //   child: ListView(
-                        //     scrollDirection: Axis.horizontal,
-                        //     children: [
-                        //
-                        //       Text(subject_item.semester),
-                        //    Container(child: VerticalDivider(thickness:1,color: Colors.black,)),
-                        //     Text(subject_item.dept),
-                        //     Container(child: VerticalDivider(thickness:1,color: Colors.black,)),
-                        //     Text('Total student : '+ subject_item.totalstrength.toString()),
-                        //   ],),
-                        // ),
-                          //---------------------------------------------
+
                           subtitle: Column(
                             children: [
                             Row(
@@ -116,12 +101,24 @@ class HomeScreen extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            // Text('Total student : '+ subject_item.totalstrength.toString())
+
                           ],),
                           //----------------------------------------
-                          trailing: IconButton(onPressed: (){
-                           subject_box.delete(subject_item.id);
-                          },icon: Icon(Icons.delete),),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(onPressed: (){
+                                subjectaddoredit=false;
+                               // Provider.of<Assigncontrollers>(context).initialValue();
+                                Provider.of<Assigncontrollers>(context,listen: false).Assign(subject_item);
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context){ return AddSubject();}));
+                              },icon: const Icon(Icons.edit),),
+
+                              IconButton(onPressed: (){
+                               subject_box.delete(subject_item.id);
+                              },icon: const Icon(Icons.delete),),
+                            ],
+                          ),
                         ),
                       ),
                     );
