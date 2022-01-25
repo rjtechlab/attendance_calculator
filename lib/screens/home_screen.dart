@@ -129,6 +129,7 @@ class HomeScreen extends StatelessWidget {
                                           }, child:Text('Cancel') ),
                                           TextButton(onPressed: (){
                                             subject_box.delete(subject_item.id);
+                                            Navigator.of(context).pop();
                                           }, child:Text('Ok') ),
                                         ],
                                       )

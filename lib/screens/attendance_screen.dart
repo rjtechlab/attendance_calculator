@@ -98,7 +98,27 @@ class AttendanceScreen extends StatelessWidget {
                                       child: Text(parsedate(attendance_item.date),
                                         style: TextStyle(color: Colors.black,fontSize: 12,fontWeight: FontWeight.bold),)),
                                   trailing: IconButton(icon: Icon(Icons.delete),onPressed: (){
-                                    attendance_box.delete(keys[index]);
+                                    showDialog(context: context, builder: (context){
+                                      return AlertDialog(title: Text('Delete?'),content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text('Are you sure you want to delete this item ?'),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.end,
+                                            children: [
+                                              TextButton(onPressed: (){
+                                                Navigator.of(context).pop();
+                                              }, child:Text('Cancel') ),
+                                              TextButton(onPressed: (){
+                                                attendance_box.delete(keys[index]);
+                                                Navigator.of(context).pop();
+                                              }, child:Text('Ok') ),
+                                            ],
+                                          )
+                                        ],
+                                      ),);
+                                    });
+
 
                                     final checkkeys=attendance_box.keys.where((element) => attendance_box.get(element)!.submodel.id==subjectmodel.id);
                                     if(checkkeys.isEmpty){
