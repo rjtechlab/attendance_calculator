@@ -116,7 +116,26 @@ class HomeScreen extends StatelessWidget {
                               },icon: const Icon(Icons.edit),),
 
                               IconButton(onPressed: (){
-                               subject_box.delete(subject_item.id);
+                                showDialog(context: context, builder: (context){
+                                  return AlertDialog(title: Text('Delete?'),content: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text('Are you sure you want to delete this item ?'),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.end,
+                                        children: [
+                                          TextButton(onPressed: (){
+                                            Navigator.of(context).pop();
+                                          }, child:Text('Cancel') ),
+                                          TextButton(onPressed: (){
+                                            subject_box.delete(subject_item.id);
+                                          }, child:Text('Ok') ),
+                                        ],
+                                      )
+                                    ],
+                                  ),);
+                                });
+
                               },icon: const Icon(Icons.delete),),
                             ],
                           ),

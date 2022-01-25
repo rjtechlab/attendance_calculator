@@ -5,12 +5,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import '../providerclass.dart';
 
 class AddAttendanceScreen extends StatelessWidget {
   SubjectModel subjectModel;
   //String subject;
   //int totalstudents;
   ValueNotifier<String> datein_string = ValueNotifier<String>('');
+  ValueNotifier<int> element = ValueNotifier<int>(0);
   DateTime? date;
   final absent_controller = TextEditingController();
   final period_controller = TextEditingController();
@@ -137,11 +141,13 @@ class AddAttendanceScreen extends StatelessWidget {
 
     if (absentees.isNotEmpty) {
       absenteeslist = absentees.split(",");
+     // absenteeslist.remove('0');
       absenteeslist_integer = absenteeslist.map(int.parse).toList();
         print('ok $absenteeslist_integer');
-      for (var element in absenteeslist_integer) {
 
-        if (element>subjectModel.totalstrength) {
+      for (var i in absenteeslist_integer) {
+        element.value=i;
+        if (i>subjectModel.totalstrength || i==0) {
           print(element);
           print(subjectModel.totalstrength);
          //  await showDialog(context: context, builder: (context){
@@ -149,44 +155,50 @@ class AddAttendanceScreen extends StatelessWidget {
          // });
 
           await showDialog(context: context, builder: (context) {
-            return AlertDialog(title: Text('Alert!!'),
-              // });
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    keyboardType: TextInputType.numberWithOptions(),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp('[0-9,]')),
+            return ValueListenableBuilder(
+              valueListenable: element,
+              builder: (BuildContext context, element, Widget? child) {
+                return AlertDialog(title: Text('Alert!!'),
+                  // });
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      TextField(
+                        keyboardType: TextInputType.numberWithOptions(),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp('[0-9,]')),
+                        ],
+                        decoration:
+                        InputDecoration(border: OutlineInputBorder()),
+                        controller: absent_controller,
+                      ),
+                      Text(element==0?'Remove 0 in attendance list':'Total student strength is' +
+                          subjectModel.totalstrength.toString()),
+                      ElevatedButton(
+                          onPressed: () {
+                            absenteeslist.clear();
+                            final absent = absent_controller.text;
+                            absenteeslist = absent.split(",");
+                            find_finalattendance(context, absent_controller.text);
+                            absenteeslist_integer =
+                                absenteeslist.map(int.parse).toList();
+
+                            finalattendancelist = absenteeslist_integer;
+
+                            print('parsed list=$finalattendancelist');
+                            // absent_controller.clear();
+
+                            //Clear textformfield after attendance  entering
+                            SystemChannels.textInput.invokeMethod(
+                                'TextInput.hide'); //Dispose keyboard
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('OK')),
                     ],
-                    decoration:
-                    InputDecoration(border: OutlineInputBorder()),
-                    controller: absent_controller,
-                  ),
-                  Text('Total student strength is' +
-                      subjectModel.totalstrength.toString()),
-                  ElevatedButton(
-                      onPressed: () {
-                        absenteeslist.clear();
-                        final absent = absent_controller.text;
-                        absenteeslist = absent.split(",");
-                        find_finalattendance(context, absent_controller.text);
-                        absenteeslist_integer =
-                            absenteeslist.map(int.parse).toList();
+                  ),);
+              },
 
-                        finalattendancelist = absenteeslist_integer;
-
-                        print('parsed list=$finalattendancelist');
-                       // absent_controller.clear();
-
-                        //Clear textformfield after attendance  entering
-                        SystemChannels.textInput.invokeMethod(
-                            'TextInput.hide'); //Dispose keyboard
-                        Navigator.of(context).pop();
-                      },
-                      child: Text('OK')),
-                ],
-              ),);
+            );
           });
               }
           else
