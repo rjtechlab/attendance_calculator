@@ -61,9 +61,10 @@ class AddAttendanceScreen extends StatelessWidget {
               key: _FormKey,
               child: TextFormField(
                 validator: (value){
-                  if(value==null||value.isEmpty){
+                  if(value=='0'||value==null||value.isEmpty){
                     return 'Please enter period';
                   }
+
                 },
                 keyboardType: TextInputType.number,
                 inputFormatters: [
@@ -84,7 +85,8 @@ class AddAttendanceScreen extends StatelessWidget {
                   lastDate: DateTime.now());
               if (selecteddatetemp == null) {
                 return;
-              } else {
+              }
+              else {
                 date = selecteddatetemp;
                 datein_string.value = date.toString();
               }
@@ -92,7 +94,7 @@ class AddAttendanceScreen extends StatelessWidget {
             icon: Icon(Icons.calendar_today,color: Colors.brown,),
             label:  ValueListenableBuilder( valueListenable: datein_string,
               builder: (BuildContext ctx, String finaldate, Widget? _) {
-                return date==null?Text('SelectDate',style: TextStyle(color: Colors.grey[800]),):Text(DateFormat.yMMMd().format(date!),style: TextStyle(color: Colors.brown),);
+                return date==null?Text('SelectDate',style: TextStyle(color: Colors.red),):Text(DateFormat.yMMMd().format(date!),style: TextStyle(color: Colors.brown),);
               },
             ),
           ),
@@ -102,31 +104,33 @@ class AddAttendanceScreen extends StatelessWidget {
               style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.grey)),
                 onPressed: () async {
 
-                  _FormKey.currentState!.validate();
-                  if(date==null){
-                    return;
-                  }
+               if( _FormKey.currentState!.validate()){
+                 if(date==null){
+                   return;
+                 }
                  final  periodlist = period_controller.text.split(",");
                  final periodlist_integer = periodlist.map(int.parse).toList();
 
 
                  // final absentees = absent_controller.text.split(',');
-                 await find_finalattendance(context, absent_controller.text);
+                 find_finalattendance(context, absent_controller.text);
 
-                  final attendance_data=AttendenceModel(periods: periodlist_integer, date: date!, id: DateTime.now().microsecondsSinceEpoch.toString(),
-                      rollnumberlist: finalattendancelist, subject:subjectModel.subject, department: subjectModel.dept, submodel: subjectModel);
-                  attendance_box.add(attendance_data);
-                  final list=attendance_box.values.toList();
-                  list.sort((a,b)=>b.date.compareTo(a.date));
-                  final listkeys=attendance_box.keys.cast();
-                  attendance_box.deleteAll(listkeys);
-                  await attendance_box.addAll(list);
+                 final attendance_data=AttendenceModel(periods: periodlist_integer, date: date!, id: DateTime.now().microsecondsSinceEpoch.toString(),
+                     rollnumberlist: finalattendancelist, subject:subjectModel.subject, department: subjectModel.dept, submodel: subjectModel);
+                 attendance_box.add(attendance_data);
+                 final list=attendance_box.values.toList();
+                 list.sort((a,b)=>b.date.compareTo(a.date));
+                 final listkeys=attendance_box.keys.cast();
+                 attendance_box.deleteAll(listkeys);
+                 await attendance_box.addAll(list);
 
 
-                  attendance_box.isEmpty?isemptycalculatebutton.value=false:isemptycalculatebutton.value=true;
-                  isemptycalculatebutton.notifyListeners();
+                 attendance_box.isEmpty?isemptycalculatebutton.value=false:isemptycalculatebutton.value=true;
+                 isemptycalculatebutton.notifyListeners();
 
-                  Navigator.pop(context);
+                 Navigator.pop(context);
+               }
+
                 },
                 child: Text('Add',style: TextStyle(color: Colors.black),)),
           ),
@@ -210,7 +214,7 @@ class AddAttendanceScreen extends StatelessWidget {
     else{
       finalattendancelist=absenteeslist_integer;
       print('in else');
-      Navigator.of(context).pop();
+
     }
     SystemChannels.textInput.invokeMethod('TextInput.hide'); //Dispose keyboard
   }
