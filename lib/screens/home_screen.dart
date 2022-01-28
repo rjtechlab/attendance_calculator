@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:attendance_calculator/main.dart';
 import 'package:attendance_calculator/model/subject_model.dart';
 import 'package:attendance_calculator/screens/addsubject_screen.dart';
-import 'package:attendance_calculator/screens/add_attendance_screen.dart';
+import 'package:attendance_calculator/screens/add_period.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';

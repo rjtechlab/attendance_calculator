@@ -1,13 +1,15 @@
 import 'package:attendance_calculator/main.dart';
 import 'package:attendance_calculator/model/attendance_model.dart';
 import 'package:attendance_calculator/model/subject_model.dart';
-import 'package:attendance_calculator/screens/add_attendance_screen.dart';
+import 'package:attendance_calculator/screens/add_period.dart';
 import 'package:attendance_calculator/screens/calculate_attendance_screen.dart';
 import 'package:attendance_calculator/screens/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
+
+import 'add_period_screen.dart';
 
 class AttendanceScreen extends StatelessWidget {
   SubjectModel subjectmodel;
@@ -29,9 +31,11 @@ class AttendanceScreen extends StatelessWidget {
 
           Navigator.of(context).push(MaterialPageRoute(builder: (context)
           {
-            return AddAttendanceScreen(subjectModel: subjectmodel,
-
-            );}));
+            return AddPeriodScreen(passingsubjectmodel: subjectmodel,);
+            //---------------------------------------
+            //return AddAttendanceScreen(subjectModel: subjectmodel,);
+            //-------------------------------------
+          }));
 
 
         }, icon: Icon(Icons.add))

@@ -69,9 +69,10 @@ class AddAttendanceScreen extends StatelessWidget {
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp('[0-9,]')),
+
                 ],
                 decoration: const InputDecoration(
-                    hintText: 'Enter period', border: OutlineInputBorder()),
+                    hintText: 'Enter periods', border: OutlineInputBorder()),
                 controller: period_controller,
               ),
             ),
