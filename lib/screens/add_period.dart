@@ -22,6 +22,9 @@ class AddPeriodScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Enter Periods '),
+      ),
       body: SafeArea(
         child: Center(
           child: Column(
@@ -46,7 +49,7 @@ class AddPeriodScreen extends StatelessWidget {
                         }
                       } else {
                         if (val == ',,') {
-                          alert(context,'Remove double entry of comma');
+                          alert(context,'Remove double entry of comma ');
                         }
                       }
                     },
@@ -55,7 +58,7 @@ class AddPeriodScreen extends StatelessWidget {
                       FilteringTextInputFormatter.allow(RegExp('[0-9,]')),
                     ],
                     decoration: const InputDecoration(
-                        hintText: 'Enter periods', border: OutlineInputBorder()),
+                        hintText: 'Enter periods seperated by comma eg 1,2,4', border: OutlineInputBorder()),
                     controller: period_controller,
                   ),
                 ),
@@ -106,8 +109,11 @@ class AddPeriodScreen extends StatelessWidget {
                           final period1= period.split(',');
                           period1.remove('');
                           periodlist = period1.map(int.parse).toList();
-                          Navigator.of(context).push(MaterialPageRoute(builder: (C){
-                            return EnterAttendance(periodlist,passingsubjectmodel);
+
+                          // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context2){
+                          //   return AddAttendance(periodlist, passingsubjectmodel, date!);}), (route) => false);
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context){
+                            return AddAttendance(periodlist,passingsubjectmodel,date!);
                           }));
 
                     }

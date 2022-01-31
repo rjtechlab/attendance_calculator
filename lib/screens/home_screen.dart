@@ -71,9 +71,9 @@ class HomeScreen extends StatelessWidget {
                               }
                             print(isemptycalculatebutton.value);
                              Timer(Duration(milliseconds: 300), (){
-                               Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                               Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context1){
                                  return AttendanceScreen(
-                                     subjectmodel: subject_item!
+                                      subject_item!
                                  );}));
                              });
 

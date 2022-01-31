@@ -18,24 +18,30 @@ class AttendanceScreen extends StatelessWidget {
   List<int>rollnumber_calculation=[];
 
 
-  AttendanceScreen({required this.subjectmodel});
+  AttendanceScreen( this.subjectmodel);
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       backgroundColor: Colors.grey[200],
-      appBar: AppBar(backgroundColor: Colors.brown,
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        backgroundColor: Colors.brown,
         title: Text('${subjectmodel.subject} Attendance'),actions: [
         IconButton(onPressed: (){
-
-          Navigator.of(context).push(MaterialPageRoute(builder: (context)
-          {
-            return AddPeriodScreen(passingsubjectmodel: subjectmodel,);
-            //---------------------------------------
-            //return AddAttendanceScreen(subjectModel: subjectmodel,);
-            //-------------------------------------
-          }));
+            Navigator.of(context).push(MaterialPageRoute(builder: (ctx){
+              return AddPeriodScreen(passingsubjectmodel: subjectmodel);
+            }));
+          // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context){
+          //   return AddPeriodScreen(passingsubjectmodel: subjectmodel);}), (route) => false);
+          // Navigator.of(context).push(MaterialPageRoute(builder: (context1)
+          // {
+          //   return AddPeriodScreen(passingsubjectmodel: subjectmodel,);
+          //   //---------------------------------------
+          //   //return AddAttendanceScreen(subjectModel: subjectmodel,);
+          //   //-------------------------------------
+          // }));
 
 
         }, icon: Icon(Icons.add))

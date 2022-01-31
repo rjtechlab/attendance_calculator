@@ -1,14 +1,19 @@
+import 'package:attendance_calculator/model/attendance_model.dart';
 import 'package:attendance_calculator/model/subject_model.dart';
+import 'package:attendance_calculator/screens/attendance_screen.dart';
 import 'package:attendance_calculator/widgets/alert.dart';
+import 'package:attendance_calculator/widgets/save_attendance.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class EnterAttendance extends StatelessWidget {
+import '../main.dart';
+
+class AddAttendance extends StatelessWidget {
   List<int> periods;
   SubjectModel passingsubjectmodel;
-
-  EnterAttendance(this.periods, this.passingsubjectmodel);
+DateTime date=DateTime.now();
+  AddAttendance(this.periods, this.passingsubjectmodel, DateTime date);
 
   
   bool checkedValue = false;
@@ -16,6 +21,7 @@ class EnterAttendance extends StatelessWidget {
   bool limitexeed = false;
   bool fullpresent = false;
   List<String> spilittedlcontroller = [];
+  List<int> controllerlist_int=[];
 
   @override
   Widget build(BuildContext context) {
@@ -97,6 +103,14 @@ class EnterAttendance extends StatelessWidget {
                       controllerlist.clear();
 
                       for (int j = 0; j < periods.length; j++) {
+                        if(controllers[j].text.endsWith(',')){
+
+                          await  alert(context,'Please enter valid period');
+
+                          return;
+                        }
+
+
                         if (controllers[j].text.contains(',,')) {
                          await alert(context,'Remove double entry of comma');
                           return;
@@ -109,6 +123,17 @@ class EnterAttendance extends StatelessWidget {
                       controllerlist.remove('');                      
                       print(controllerlist);
                       validation(context, controllerlist);
+                      final data=AttendenceModel(subject: passingsubjectmodel.subject,
+                          periods: periods,
+                          date: date,
+                          id: DateTime.now().microsecondsSinceEpoch.toString(),
+                          rollnumberlist: controllerlist_int,
+                          department: passingsubjectmodel.dept,
+                          submodel: passingsubjectmodel);
+                      attendance_box.put(data.id, data);
+                      Navigator.of(context).pop();
+                      //Navigator.of(context).push(MaterialPageRoute(builder: (context){return AttendanceScreen(subjectmodel);}));
+                     // SaveAttendance(passingsubjectmodel,controllerlist_int,periods);
                     },
                     child: Text('Add')),
               ),
@@ -119,25 +144,11 @@ class EnterAttendance extends StatelessWidget {
     );
   }
 
-  // Future<void> alert(BuildContext context) async {
-  //   showDialog(
-  //       context: context,
-  //       builder: (ctx) {
-  //         return AlertDialog(
-  //           title: Text('Remove double entry of comma'),
-  //           content: TextButton(
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //             child: Text('ok'),
-  //           ),
-  //         );
-  //       });
-  // }
+
 
   Future<void> validation(context, List<String> controllerlist) async {
     if (controllerlist.isNotEmpty) {
-      List<int> controllerlist_int = controllerlist.map(int.parse).toList();
+      controllerlist_int = controllerlist.map(int.parse).toList();
       for (var i in controllerlist_int) {
 
         if (i > passingsubjectmodel.totalstrength) {
@@ -166,9 +177,10 @@ class EnterAttendance extends StatelessWidget {
                 ),
               );
             });
-      } else {
-        print(controllerlist_int);
       }
+      // else {
+      //   print(controllerlist_int);
+      // }
     }
   }
 }
