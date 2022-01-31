@@ -1,9 +1,10 @@
 import 'package:attendance_calculator/model/subject_model.dart';
+import 'package:attendance_calculator/widgets/alert.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
-import 'entery_attendance.dart';
+import 'add_attendance_screen.dart';
 class AddPeriodScreen extends StatelessWidget {
 
   List<int>periodlist=[];
@@ -34,7 +35,20 @@ class AddPeriodScreen extends StatelessWidget {
                       if(value=='0'||value==null||value.isEmpty){
                         return 'Please enter period';
                       }
+                    },
+                    onChanged: (val) async {
+                      print(val);
+                      if (val.length > 2) {
+                        var newString = val.substring((val.length - 2));
+                        if (newString == ',,') {
 
+                          await alert(context,'Remove double entry of comma');
+                        }
+                      } else {
+                        if (val == ',,') {
+                          alert(context,'Remove double entry of comma');
+                        }
+                      }
                     },
                     keyboardType: TextInputType.number,
                     inputFormatters: [
@@ -70,15 +84,27 @@ class AddPeriodScreen extends StatelessWidget {
                 ),
               ),
               //---------------------------------
-              ElevatedButton(onPressed: (){
+              ElevatedButton(onPressed: () async {
                   if( _FormKey.currentState!.validate()){
                           if(date==null)
                           {
+                            await  alert(context,'Select Date');
+                            return;
+                          }
+                          if(period_controller.text.contains(',,')){
+                           await  alert(context,'Remove double entry of comma');
+                           return;
+                          }
+                          if(period_controller.text.endsWith(',')){
+
+                            await  alert(context,'Please enter valid period');
+
                             return;
                           }
                               //----------------
                           final period= period_controller.text;
                           final period1= period.split(',');
+                          period1.remove('');
                           periodlist = period1.map(int.parse).toList();
                           Navigator.of(context).push(MaterialPageRoute(builder: (C){
                             return EnterAttendance(periodlist,passingsubjectmodel);
