@@ -191,7 +191,7 @@ DateTime date;
           periodwise_absentlist.add(splittedcontroller_int);
 
         }
-        print(periodwise_absentlist[1]);
+        //print(periodwise_absentlist[1]);
 
 
         final data=AttendenceModel(subject: passingsubjectmodel.subject,
@@ -202,6 +202,8 @@ DateTime date;
             department: passingsubjectmodel.dept,
             submodel: passingsubjectmodel);
         attendance_box.put(data.id, data);
+        isemptycalculatebutton.value=true;
+        isemptycalculatebutton.notifyListeners();
         Navigator.of(context).popUntil((_) => count++>=2);
         print(controllerlist_int);
       }

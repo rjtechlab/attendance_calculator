@@ -27,7 +27,7 @@ Future<void> main() async {
   subject_box=await Hive.openBox<SubjectModel>('name');
   attendance_box=await Hive.openBox<AttendenceModel>('attendance');
  //attendance_box.clear();
-  //subject_box.clear();
+ // subject_box.clear();
   runApp(MyApp());
 }
 

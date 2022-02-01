@@ -4,6 +4,7 @@ import 'package:attendance_calculator/model/subject_model.dart';
 import 'package:attendance_calculator/screens/add_period.dart';
 import 'package:attendance_calculator/screens/calculate_attendance_screen.dart';
 import 'package:attendance_calculator/screens/home_screen.dart';
+import 'package:attendance_calculator/screens/periodwise_attendance_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -61,7 +62,9 @@ class AttendanceScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 10),
                       child: ElevatedButton(onPressed: (){
                         rollnumber_calculation.clear();
-                       // Navigator.of(context).push(MaterialPageRoute(builder: (context){return CalculationScreen(passingmodel: subjectmodel);}));
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context){
+                              return CalculationScreen(passingmodel: subjectmodel);}));
                       },
                         child: Text('Calculate',style: TextStyle(color: Colors.black,),),
                         style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.grey)),),
@@ -89,9 +92,12 @@ class AttendanceScreen extends StatelessWidget {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: ListTile(
+                                  onTap: (){
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (context){return PeriodwiseAttendanceScreen(attendance_item);}));
+                                  },
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5),
                                       side: BorderSide(color: Colors.black)),
-                                  title:Text('Period : '+attendance_item!.periods.toString().replaceAll('[', ' ').replaceAll(']', ' ')),
+                                  title:Text('Periods : '+attendance_item!.periods.toString().replaceAll('[', ' ').replaceAll(']', ' ')),
                                   //Text('Absentees : '+attendance_item!.rollnumberlist[2].toString()),
 
                                   subtitle: ListView(
@@ -99,9 +105,9 @@ class AttendanceScreen extends StatelessWidget {
                                     shrinkWrap: true,
                                     //mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Text('Dept. : '+attendance_item.department),
+                                      Text('Dept. : '+attendance_item.department,style: TextStyle(color: Colors.black),),
                                       SizedBox(width: 10),
-                                      Text('Tap to view absentees'),
+                                      Text('Tap to view absentees list'),
                                     ],
                                   ),
                                   leading: CircleAvatar(
@@ -121,8 +127,22 @@ class AttendanceScreen extends StatelessWidget {
                                               TextButton(onPressed: (){
                                                 Navigator.of(context).pop();
                                               }, child:Text('Cancel') ),
-                                              TextButton(onPressed: (){
-                                                attendance_box.delete(keys[index]);
+                                              TextButton(onPressed: () async {
+                                              await  attendance_box.delete(keys[index]);
+
+
+                                                final checkkeys=attendance_box.keys.where((element) => attendance_box.get(element)!.submodel.id==subjectmodel.id);
+                                                if(checkkeys.isEmpty){
+                                                  isemptycalculatebutton.value=false;
+                                                  isemptycalculatebutton.notifyListeners();
+                                                }
+                                                else
+                                                {
+                                                  isemptycalculatebutton.value=true;
+                                                  isemptycalculatebutton.notifyListeners();
+                                                }
+
+
                                                 Navigator.of(context).pop();
                                               }, child:Text('Ok') ),
                                             ],
