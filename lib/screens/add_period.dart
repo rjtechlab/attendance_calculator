@@ -110,11 +110,11 @@ class AddPeriodScreen extends StatelessWidget {
                           period1.remove('');
                           periodlist = period1.map(int.parse).toList();
 
-                          // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context2){
-                          //   return AddAttendance(periodlist, passingsubjectmodel, date!);}), (route) => false);
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context){
-                            return AddAttendance(periodlist,passingsubjectmodel,date!);
-                          }));
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context2){
+                            return AddAttendance(periodlist, passingsubjectmodel, date!);}));
+                          // Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context){
+                          //   return AddAttendance(periodlist,passingsubjectmodel,date!);
+                          // }));
 
                     }
                   },

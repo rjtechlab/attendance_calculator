@@ -12,20 +12,23 @@ import '../main.dart';
 class AddAttendance extends StatelessWidget {
   List<int> periods;
   SubjectModel passingsubjectmodel;
-DateTime date=DateTime.now();
-  AddAttendance(this.periods, this.passingsubjectmodel, DateTime date);
+DateTime date;
+  AddAttendance(this.periods, this.passingsubjectmodel,this.date);
+  int count=0;
 
   
   bool checkedValue = false;
   ValueNotifier<bool> checkvalue = ValueNotifier(false);
   bool limitexeed = false;
   bool fullpresent = false;
-  List<String> spilittedlcontroller = [];
+  List<String> splittedcontroller = [];
   List<int> controllerlist_int=[];
+  List<List<int>> periodwise_absentlist=[];
+  List<TextEditingController> controllers=[];
 
   @override
   Widget build(BuildContext context) {
-    List<TextEditingController> controllers;
+
     controllers =
         List.generate(periods.length, (index) => TextEditingController());
     List<Widget> list = [];
@@ -103,35 +106,31 @@ DateTime date=DateTime.now();
                       controllerlist.clear();
 
                       for (int j = 0; j < periods.length; j++) {
-                        if(controllers[j].text.endsWith(',')){
-
-                          await  alert(context,'Please enter valid period');
-
-                          return;
-                        }
+                        // if(controllers[j].text.endsWith(',')){
+                        //
+                        //   await  alert(context,'Please enter valid period');
+                        //
+                        //   return;
+                        // }
 
 
                         if (controllers[j].text.contains(',,')) {
                          await alert(context,'Remove double entry of comma');
                           return;
                         } else {
-                          spilittedlcontroller = controllers[j].text.split(',');
-                          spilittedlcontroller.remove('');
-                          controllerlist.addAll(spilittedlcontroller);
+
+                          splittedcontroller = controllers[j].text.split(',');
+                          splittedcontroller.remove('');
+                         // periodwise_absentlist.clear();
+                         // periodwise_absentlist.add(splittedcontroller);
+                         // print('last : $periodwise_absentlist[1]');
+                          controllerlist.addAll(splittedcontroller);
                         }
                       }
                       controllerlist.remove('');                      
                       print(controllerlist);
-                      validation(context, controllerlist);
-                      final data=AttendenceModel(subject: passingsubjectmodel.subject,
-                          periods: periods,
-                          date: date,
-                          id: DateTime.now().microsecondsSinceEpoch.toString(),
-                          rollnumberlist: controllerlist_int,
-                          department: passingsubjectmodel.dept,
-                          submodel: passingsubjectmodel);
-                      attendance_box.put(data.id, data);
-                      Navigator.of(context).pop();
+                     await validation(context, controllerlist);
+
                       //Navigator.of(context).push(MaterialPageRoute(builder: (context){return AttendanceScreen(subjectmodel);}));
                      // SaveAttendance(passingsubjectmodel,controllerlist_int,periods);
                     },
@@ -158,7 +157,7 @@ DateTime date=DateTime.now();
       if (limitexeed == true || controllerlist_int.contains(0)) {
         await showDialog(
             context: context,
-            builder: (context) {
+            builder: (ctx) {
               return AlertDialog(
                 title: Text('Alert'),
                 content: Column(
@@ -167,10 +166,14 @@ DateTime date=DateTime.now();
 
                     limitexeed == true
                         ? Text('Entered roll number exceeds the total strength')
-                        : Text('Remove Zero in attendence entry'),
+                        : Text('Remove "0" in attendence entry'),
                     TextButton(
                         onPressed: () {
-                          Navigator.of(context).pop();
+                          //controllerlist.clear();
+                          //controllerlist_int.clear();
+                          limitexeed=false;
+                           Navigator.of(ctx).pop();
+
                         },
                         child: Text('Ok'))
                   ],
@@ -178,9 +181,30 @@ DateTime date=DateTime.now();
               );
             });
       }
-      // else {
-      //   print(controllerlist_int);
-      // }
+      else {
+        periodwise_absentlist.clear();
+        for (int j = 0; j < periods.length; j++) {
+          splittedcontroller = controllers[j].text.split(',');
+          splittedcontroller.remove('');
+          final splittedcontroller_int=splittedcontroller.map(int.parse).toList();
+
+          periodwise_absentlist.add(splittedcontroller_int);
+
+        }
+        print(periodwise_absentlist[1]);
+
+
+        final data=AttendenceModel(subject: passingsubjectmodel.subject,
+            periods: periods,
+            date: date,
+            id: DateTime.now().microsecondsSinceEpoch.toString(),
+            rollnumberlist: periodwise_absentlist,
+            department: passingsubjectmodel.dept,
+            submodel: passingsubjectmodel);
+        attendance_box.put(data.id, data);
+        Navigator.of(context).popUntil((_) => count++>=2);
+        print(controllerlist_int);
+      }
     }
   }
 }

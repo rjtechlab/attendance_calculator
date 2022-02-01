@@ -61,7 +61,7 @@ class AttendanceScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(top: 10),
                       child: ElevatedButton(onPressed: (){
                         rollnumber_calculation.clear();
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context){return CalculationScreen(passingmodel: subjectmodel);}));
+                       // Navigator.of(context).push(MaterialPageRoute(builder: (context){return CalculationScreen(passingmodel: subjectmodel);}));
                       },
                         child: Text('Calculate',style: TextStyle(color: Colors.black,),),
                         style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.grey)),),
@@ -85,13 +85,15 @@ class AttendanceScreen extends StatelessWidget {
                           ),)): ListView.separated(
                             itemBuilder: (context,index){
                               final attendance_item=value.get(keys[index]);
-                              rollnumber_calculation.addAll(attendance_item!.rollnumberlist);
+                           //   rollnumber_calculation.addAll(attendance_item!.rollnumberlist);
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: ListTile(
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5),
                                       side: BorderSide(color: Colors.black)),
-                                  title: Text('Absentees : '+attendance_item.rollnumberlist.toString()),
+                                  title:Text('Period : '+attendance_item!.periods.toString().replaceAll('[', ' ').replaceAll(']', ' ')),
+                                  //Text('Absentees : '+attendance_item!.rollnumberlist[2].toString()),
+
                                   subtitle: ListView(
 
                                     shrinkWrap: true,
@@ -99,7 +101,7 @@ class AttendanceScreen extends StatelessWidget {
                                     children: [
                                       Text('Dept. : '+attendance_item.department),
                                       SizedBox(width: 10),
-                                      Text('Period : '+attendance_item.periods.toString().replaceAll('[', ' ').replaceAll(']', ' ')),
+                                      Text('Tap to view absentees'),
                                     ],
                                   ),
                                   leading: CircleAvatar(

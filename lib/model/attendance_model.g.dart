@@ -21,7 +21,7 @@ class AttendenceModelAdapter extends TypeAdapter<AttendenceModel> {
       periods: (fields[2] as List).cast<int>(),
       date: fields[3] as DateTime,
       id: fields[0] as String,
-      rollnumberlist: (fields[1] as List).cast<int>(),
+      rollnumberlist: (fields[1] as List).cast<dynamic>(),
       department: fields[5] as String,
       submodel: fields[6] as SubjectModel,
     );

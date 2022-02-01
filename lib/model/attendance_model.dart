@@ -1,5 +1,6 @@
 import 'package:attendance_calculator/model/subject_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+//import 'attendance_model.g.dart';
 part 'attendance_model.g.dart';
 
 @HiveType(typeId: 2)
@@ -8,7 +9,7 @@ class AttendenceModel {
   final String id;
 
   @HiveField(1)
-  final List<int>rollnumberlist;
+  final List rollnumberlist;
 
   @HiveField(2)
   final List<int> periods;
